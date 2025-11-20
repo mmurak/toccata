@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<title>Toccata</title>
+		<link rel="shortcut icon" href="kiwi-bird-red.png">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<link rel="stylesheet" href="./toccata.css">
+	</head>
+	<body>
+		<header class="fixed-header">
+			<div class="flex-component">
+				<div style="display: flex; align-items: center">
+					<input type="file" id="InputFile" accept=".cfg" />
+					<label for="InputFile" class="FileInputLabel">Select File</label>
+					<div id="FileNameDisplay">Not selected</div>
+				</div>
+				<div>
+					<label for="Nombre">Page No.</label>
+					<input type="textfield" id="Nombre" disabled />
+				</div>
+			</div>
+		</header>
+		<div class="content">
+			<div id="TOCarea" class="TOCcontainer">
+			</div>
+		</div>
+
+		<script src="./scripts/toccata.js"></script>
+
+	</body>
+</html>

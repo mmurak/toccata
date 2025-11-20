@@ -1,0 +1,134 @@
+body {
+	margin: 0;
+	font-family: "Times New Roman", Times, serif;
+}
+
+.fixed-header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background-color: #ccc;
+	padding: 10px 20px;
+	z-index: 1000;
+	box-sizing: border-box;
+}
+
+.flex-component {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;"
+}
+
+.content {
+	margin-top: 60px;
+	padding: 10px 0 0 0;
+}
+
+.TOCcontainer details {
+	margin-top: 0.5rem;
+	padding-left: 2.5rem;
+}
+
+.TOCcontainer summary {
+	transition: background-color 0.15s;
+	border-radius: 4px; 
+	font-weight: 600;
+	padding: 0.5rem 0.75rem; 
+	cursor: pointer; 
+	list-style: none; 
+	color: #1f2937;
+	display: flex; 
+	align-items: center;
+}
+
+.TOCcontainer summary:hover {
+	background-color: #f3f4f6;
+}
+
+.TOCcontainer details > summary::-webkit-details-marker {
+	display: none;
+}
+
+.TOCcontainer details > summary {
+	list-style: none !important;
+}
+
+.TOCcontainer details.no-content summary {
+	color: #4b5563; 
+}
+.TOCcontainer details.no-content .toggle-icon {
+	color: #f59e0b;
+	font-size: 1.6rem;
+	cursor: default; 
+}
+
+.summary-text {
+	user-select: none;
+	flex-grow: 1;
+}
+
+.toggle-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.5rem; 
+	height: 1.5rem;
+	margin-right: 5px;
+	color: #6366f1;
+	font-size: 1.0rem;
+	transition: transform 0.2s, color 0.2s;
+}
+
+#outputContainer {
+	min-height: 200px;
+}
+
+#InputFile {
+	opacity: 0;
+	position: absolute;
+	z-index: -1;"
+}
+
+.FileInputLabel {
+	display: inline-block;
+	padding: 4px 20px; 
+	border-radius: 4px;
+	font-size: 16px;
+	text-align: center;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	user-select: none;
+	color: #333333; /* 暗めの文字色 */
+	background-color: #ffffff; /* ベースは白 */
+	border: 1px solid #cccccc; 
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.FileInputLabel:hover {
+	background-color: #f0f0f0;
+	border-color: #aaaaaa;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+	transform: translateY(-1px);
+}
+
+.FileInputLabel:active {
+	background-color: #e0e0e0;
+	border-color: #999999;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	transform: translateY(0);
+}
+
+#FileNameDisplay {
+	margin-left: 10px;
+	flex-grow: 1;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 6px 10px;
+}
+
+#Nombre {
+	width: 4em;
+}
