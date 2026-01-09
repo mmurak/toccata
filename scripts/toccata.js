@@ -71,6 +71,7 @@ function analyseConfiguration(data) {
 		factorDiv: 2,
 		factorOffset: 0,
 		factorSub: 0,
+		missingInserted: [],
 		param: '',
 		toc: [],
 	};
@@ -81,6 +82,9 @@ function analyseConfiguration(data) {
 			continue;
 		} else if (line === '[FACTOR]') {
 			currentSection = 'factor';
+			continue;
+		} else if (line === '[MISSING/INSERTED]') {
+			currentSection = 'missingInserted';
 			continue;
 		} else if (line === '[PARAM]') {
 			currentSection = 'param';
@@ -97,6 +101,8 @@ function analyseConfiguration(data) {
 			result.factorDiv = factor[0];
 			result.factorOffset = factor[1];
 			result.factorSub = factor[2];
+		} else if (currentSection === 'missingInserted') {
+			result.missingInserted.push(line);
 		} else if (currentSection === 'param') {
 			result.param = line;
 		} else if (currentSection === 'toc') {
@@ -131,7 +137,7 @@ function createTOClist(outputContainer, lines) {
 
 		const pNo = Number(page);
 		if ((pNo != 0) && (pNo < pageSeqWork)) {
-			alert(`Page sequence error: ${pageSeqWork} > ${pNo}`);
+			console.log(`Page sequence error: ${pageSeqWork} > ${pNo}`);
 		}
 		pageSeqWork = pNo;
 
@@ -219,13 +225,28 @@ function createTOClist(outputContainer, lines) {
 	});
 }
 
+function reviseMissingInserted(pno) {
+	G.config.missingInserted.forEach((p) => {
+		const result = p.match(/^\s*(\d+)\s*,\s*([-+]?\d+)/);
+		if (result === null) {
+			alert(`[MISSING/INSERTED] parameter error: ${p}`);
+			return 1;
+		}
+		if (pno >= Number(result[1])) {
+			pno += Number(result[2]);
+		}
+	});
+	return pno;
+}
+
 // ページのオープン処理
 function openPage(nombre) {
-	const pno = Number(nombre);
+	let pno = Number(nombre);
 	if (pno <= 0) {
 		G.nombre.value = '';
 		return;
 	}
+	pno = reviseMissingInserted(pno);
 	const url = G.config.url;
 	const factorDiv = G.config.factorDiv;
 	const factorOffset = G.config.factorOffset;
