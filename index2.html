@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<title>Toccata</title>
+		<link rel="shortcut icon" href="kiwi-bird-cyan.png">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<link rel="stylesheet" href="./toccata.css">
+	</head>
+	<body>
+		<header class="fixed-header">
+			<div class="flex-component">
+				<div style="display: flex; align-items: center">
+					<label id="BINDERID"></label>
+					<select id="BOOKSELECTOR" onchange="bookChanger(this)">
+					</select>
+				</div>
+				<select id="EXTRAINDEX"  onchange="indexChanger(this)" hidden></select>
+				<div>
+					<label for="Nombre">Page No.</label>
+					<input type="textfield" id="Nombre" disabled />
+				</div>
+			</div>
+		</header>
+		<div class="content">
+			<div id="TOCarea" class="TOCcontainer">
+			</div>
+		</div>
+
+		<script src="./scripts/regulatorNeo.js"></script>
+		<script src="./scripts/toccata2.js"></script>
+
+	</body>
+</html>
