@@ -44,6 +44,10 @@ if (cfgDir !== null) {
 } else {
 	alert('バインダーパラメータ（b）が指定されていません。');
 }
+if (urlParams.get('debug') === "y") {
+	console.log('Debug mode');
+}
+
 
 function bookChanger(elem) {
 	fetch(G.sanitisedPath+elem.value)
@@ -167,19 +171,21 @@ function createTOClist(outputContainer, lines) {
 	const depthStack = [{ element: rootContainer, depth: -1 }];
 	const allDetailsElements = []; 
 
-	let pageSeqWork = -999;
+	let pageSeqWork = -99999;
 
 	lines.forEach(line => {
 		const depth = line.search(/\t/) === -1 ? 0 : line.search(/[^\t]/);
-		const m = line.match(/^\t*(.+?),\s*(-?\d+)\s*$/);
+		const m = line.match(/^\t*(.+?),\s*(F?-?\d+)\s*$/);
 		const content = (m == null) ? line.replace(/,\s*$/, '') : m[1];
-		const page = (m == null) ? 0 : m[2];
+		const page = (m == null) ? '0' : m[2];
 
-		const pNo = Number(page);
-		if ((pNo != 0) && (pNo < pageSeqWork)) {
-			console.log(`Page sequence error: ${pageSeqWork} > ${pNo}`);
+		if (!page.startsWith('F')) {	// it means nombre rather than frame no.
+			const pNo = Number(page);
+			if ((pNo != 0) && (pNo < pageSeqWork)) {
+				console.log(`Page sequence error: ${pageSeqWork} > ${pNo}`);
+			}
+			pageSeqWork = pNo;
 		}
-		pageSeqWork = pNo;
 
 		if (!content) return;
 
@@ -271,8 +277,9 @@ function createIndexData(element, idxData) {
 	G.indexHash = {};
 	let indexLabel = '';
 	let page = 0;
+	let reverseFlag = false;
 	for (let ent of idxData) {
-		const m = ent.match(/^>>>(.+?)>>>(\d+)>>>(.+)$/);
+		const m = ent.match(/^>>>(.+?)>>>(-?\d+)>>>(.+)$/);
 		if (m !== null) {
 			if (G.extraIndex.hidden === true) {
 				G.extraIndex.hidden = false;
@@ -281,16 +288,23 @@ function createIndexData(element, idxData) {
 				instructor.value = '';
 				G.extraIndex.appendChild(instructor);
 			}
+			if (m[2].startsWith('-')) {
+				reverseFlag = true;
+			}
 			const elem = document.createElement('option');
 			indexLabel = m[1];
 			elem.innerHTML = indexLabel;
-			page = m[2];
+			page = Math.abs(m[2]);
 			G.indexHash[indexLabel] = [];
 			elem.value = m[3];
 			G.extraIndex.appendChild(elem);
 		} else {
 			G.indexHash[indexLabel].push(`${ent},${page}`);
-			page++;
+			if (reverseFlag) {
+				page--;
+			} else {
+				page++;
+			}
 		}
 	}
 }
@@ -321,6 +335,9 @@ function indexChanger(el) {
 				const info = G.indexHash[indexKey][i];
 				const m= info.match(/^(.+?),(\d+)$/);
 				if (R.compare(searchEntry, m[1]) >= 0) {
+					if (urlParams.get('debug') === "y") {
+						console.log(`Index: ${m[2]}`);
+					}
 					openPage(m[2], 'indexPage');
 					return;
 				}
@@ -345,13 +362,22 @@ function reviseMissingInserted(pno) {
 }
 
 // ページのオープン処理
-function openPage(nombre, pageLabel='contentsPage') {
-	let pno = Number(nombre);
-	pno = reviseMissingInserted(pno);
+function openPage(target, pageLabel='contentsPage') {
 	const url = G.config.url;
-	const factorDiv = G.config.factorDiv;
-	const factorOffset = G.config.factorOffset;
-	const factorSub = G.config.factorSub;
-	const frameNo = Math.floor((pno - Number(factorSub)) / factorDiv) + Number(factorOffset);
-	window.open(url + G.config.param + frameNo, pageLabel);
+	let frameNo = '';
+	if (!target.startsWith('F')) {	// it means target is page-nombre rather than frame-no.
+		let pno = Number(target);
+		pno = reviseMissingInserted(pno);
+		const factorDiv = G.config.factorDiv;
+		const factorOffset = G.config.factorOffset;
+		const factorSub = G.config.factorSub;
+		frameNo = Math.floor((pno - Number(factorSub)) / factorDiv) + Number(factorOffset);
+	} else {
+		frameNo = target.substring(1);
+	}
+	if (urlParams.get('debug') === "y") {
+		console.log(url + G.config.param + frameNo);
+	} else {
+		window.open(url + G.config.param + frameNo, pageLabel);
+	}
 }
